@@ -10,7 +10,7 @@ using PhyndDemo_v2.Services;
 
 namespace PhyndDemo_v2.Controllers{
 
-    [Route("login")]
+    [Route("authenticate")]
     [ApiController]
     public class LoginController : Controller{
 
@@ -23,12 +23,9 @@ namespace PhyndDemo_v2.Controllers{
             _userRepository = userRepository;
         }
 
-        [HttpGet]
-        public IActionResult Login(string email, string pass)
+        [HttpPost]
+        public IActionResult Login([FromBody] Login login)
         {
-            Login login = new Login();
-            login.Email = email;
-            login.Password = pass;
             IActionResult response = Unauthorized();
 
             var user = AuthenticateUser(login);
