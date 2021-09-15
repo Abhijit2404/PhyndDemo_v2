@@ -44,18 +44,17 @@ namespace PhyndDemo_v2.Controllers
                 return NotFound();
             }
             
-
             return Ok(_mapper.Map<UserDto>(userfromRepo));
         }
 
         [HttpPost]
-        public ActionResult<UserDto> Post(UserDto user)
+        public ActionResult<UserToCreateDto> Post(UserToCreateDto user)
         {
             var createUser = _mapper.Map<User>(user);
             _userRepository.AddUser(createUser);
             _userRepository.Save();
 
-            var userReturn  = _mapper.Map<UserDto>(createUser);
+            var userReturn  = _mapper.Map<UserToCreateDto>(createUser);
             return CreatedAtRoute("GetUser",new{Id = userReturn.Id},userReturn);
         }
 
@@ -76,7 +75,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpPut("Id")]
-        public ActionResult Put(int Id, UserDto user){
+        public ActionResult Put(int Id, UserToUpdateDto user){
             var userfromRepo = _userRepository.GetUser(Id);
             _mapper.Map(user,userfromRepo);
             _userRepository.UpdateUser(userfromRepo);

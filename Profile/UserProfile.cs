@@ -9,7 +9,9 @@ namespace PhyndDemo_v2.Services{
         public UserProfile()
         {
             CreateMap<User,UserDto>();
-            CreateMap<UserDto,User>();
+            CreateMap<User,UserToCreateDto>();
+            CreateMap<UserToUpdateDto,User>();
+            CreateMap<UserToCreateDto,User>();
         }
     }
 }

@@ -18,6 +18,7 @@ namespace PhyndDemo_v2.Data
         {
         }
 
+        public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
         public virtual DbSet<History> Histories { get; set; }
         public virtual DbSet<Hospital> Hospitals { get; set; }
         public virtual DbSet<Model.Program> Programs { get; set; }
@@ -27,24 +28,14 @@ namespace PhyndDemo_v2.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Userrole> Userroles { get; set; }
 
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     if (!optionsBuilder.IsConfigured)
-        //     {
-        //         optionsBuilder.UseMySQL("server=localhost;uid=root;pwd=root;database=phynd2;SSL mode=none");
-        //     }
-        // }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach(var e in modelBuilder.Model.GetEntityTypes())
+            modelBuilder.Entity<Efmigrationshistory>(entity =>
             {
-                foreach(var fk in e.GetForeignKeys())
-                {
-                    fk.DeleteBehavior = DeleteBehavior.Restrict;
-                }
-            }
-            
+                entity.HasKey(e => e.MigrationId)
+                    .HasName("PRIMARY");
+            });
+
             modelBuilder.Entity<History>(entity =>
             {
                 entity.Property(e => e.ActionTime).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -66,7 +57,6 @@ namespace PhyndDemo_v2.Data
                 entity.HasOne(d => d.Hospital)
                     .WithMany(p => p.Providers)
                     .HasForeignKey(d => d.HospitalId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("provider_ibfk_1");
             });
 
@@ -89,7 +79,6 @@ namespace PhyndDemo_v2.Data
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.IsDeleted).HasDefaultValueSql("false");
                 entity.Property(e => e.CreatedOn).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.ModifiedOn).HasDefaultValueSql("CURRENT_TIMESTAMP");

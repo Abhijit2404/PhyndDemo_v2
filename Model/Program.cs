@@ -33,7 +33,7 @@ namespace PhyndDemo_v2.Model
         [Column("modifiedOn")]
         public DateTime ModifiedOn { get; set; }
         [Column("isDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         [InverseProperty(nameof(Providerprogram.Program))]
         public virtual ICollection<Providerprogram> Providerprograms { get; set; }

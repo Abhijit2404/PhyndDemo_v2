@@ -21,11 +21,11 @@ namespace PhyndDemo_v2.Model
         [Column("providerId", TypeName = "int(11)")]
         public int? ProviderId { get; set; }
         [Column("isDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         [Column("createdOn")]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
         [Column("modifiedOn")]
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         [ForeignKey(nameof(ProgramId))]
         [InverseProperty("Providerprograms")]

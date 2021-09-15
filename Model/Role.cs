@@ -24,7 +24,7 @@ namespace PhyndDemo_v2.Model
         [StringLength(100)]
         public string Name { get; set; }
         [Column("isDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         [InverseProperty(nameof(Userrole.Role))]
         public virtual ICollection<Userrole> Userroles { get; set; }

@@ -39,9 +39,9 @@ namespace PhyndDemo_v2.Model
         [Column("modifiedOn")]
         public DateTime ModifiedOn { get; set; }
         [Column("isDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         [Column("hospitalId", TypeName = "int(11)")]
-        public int HospitalId { get; set; }
+        public int? HospitalId { get; set; }
 
         [ForeignKey(nameof(HospitalId))]
         [InverseProperty("Providers")]
