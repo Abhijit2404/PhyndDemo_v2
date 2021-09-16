@@ -8,7 +8,7 @@ namespace PhyndDemo_v2.Services{
 
         public UserProfile()
         {
-            CreateMap<User,UserDto>();
+            CreateMap<User,UserDto>().ForMember(d => d.Name, d => d.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<User,UserToCreateDto>();
             CreateMap<UserToUpdateDto,User>();
             CreateMap<UserToCreateDto,User>();

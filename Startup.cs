@@ -32,6 +32,8 @@ namespace PhyndDemo_v2
             options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProviderRepository,ProviderRepository>();
+            services.AddScoped<IProgramRepository,ProgramRepository>();
 
             //Enable CORS Policy
             services.AddCors(c => {

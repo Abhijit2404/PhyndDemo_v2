@@ -17,21 +17,17 @@ namespace PhyndDemo_v2.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly phynd2Context _context;
-        public UserController(IUserRepository userRepository,IMapper mapper,phynd2Context context)
+        public UserController(IUserRepository userRepository,IMapper mapper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            _context = context;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<UserDto>> Get()
         {
             var usersfromRepo = _userRepository.GetUsers();
-
             return Ok(_mapper.Map<IEnumerable<UserDto>>(usersfromRepo));
-
         }
 
         [HttpGet("{Id}", Name = "GetUser")] 
@@ -74,8 +70,8 @@ namespace PhyndDemo_v2.Controllers
             return NoContent();
         }
 
-        [HttpPut("Id")]
-        public ActionResult Put(int Id, UserToUpdateDto user){
+        [HttpPatch]
+        public ActionResult Patch(int Id, UserToUpdateDto user){
             var userfromRepo = _userRepository.GetUser(Id);
             _mapper.Map(user,userfromRepo);
             _userRepository.UpdateUser(userfromRepo);

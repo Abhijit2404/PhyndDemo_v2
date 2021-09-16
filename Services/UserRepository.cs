@@ -46,7 +46,7 @@ namespace PhyndDemo_v2.Services{
 
         public void UpdateUser(User user)
         {
-            //Not required as we are mapping it with the DTO
+            //DTO Mapping
         }
 
         public bool Save()
