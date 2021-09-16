@@ -54,11 +54,6 @@ namespace PhyndDemo_v2.Services{
             return (_context.SaveChanges() >= 0);
         }
 
-        public bool UserExists(int Id)
-        {
-            return _context.Users.Any(a => a.Id == Id);
-        }
-
         public User LoginUser(string email, string pass)
         {
             return _context.Users.SingleOrDefault(u => u.Email == email & u.Password == pass);

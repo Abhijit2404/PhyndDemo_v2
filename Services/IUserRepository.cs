@@ -13,7 +13,6 @@ namespace PhyndDemo_v2.Services{
         void UpdateUser(User User);
         User LoginUser(string email, string pass);
         IEnumerable<User> GetUsers(Params userParams);
-        bool UserExists(int Id);
         bool Save();
     }
 }

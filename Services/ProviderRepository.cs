@@ -78,12 +78,6 @@ namespace PhyndDemo_v2.Services{
 
             return collection.ToList();
         }
-
-        public bool ProviderExists(int Id)
-        {
-            return _context.Providers.Any(a => a.Id == Id);
-        }
-
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);

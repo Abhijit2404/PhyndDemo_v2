@@ -72,11 +72,6 @@ namespace PhyndDemo_v2.Services{
             return collection.ToList();
         }
 
-        public bool ProgramExists(int Id)
-        {
-            return _context.Programs.Any(a => a.Id == Id);
-        }
-
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
