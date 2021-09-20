@@ -54,7 +54,7 @@ namespace PhyndDemo_v2.Controllers
             return CreatedAtRoute("GetUser",new{Id = userReturn.Id},userReturn);
         }
 
-        [HttpDelete("Id")]
+        [HttpDelete]
         public ActionResult Delete(int Id){
 
             var userfromRepo = _userRepository.GetUser(Id);
