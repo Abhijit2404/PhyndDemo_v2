@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj": {}
+    "C:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj": {}
   },
   "projects": {
-    "c:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj": {
+    "C:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj",
+        "projectUniqueName": "C:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj",
         "projectName": "PhyndDemo_v2",
-        "projectPath": "c:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj",
+        "projectPath": "C:\\Users\\abhijit.shinde\\PhyndDemo_v2\\PhyndDemo_v2.csproj",
         "packagesPath": "C:\\Users\\abhijit.shinde\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\abhijit.shinde\\PhyndDemo_v2\\obj\\",
+        "outputPath": "C:\\Users\\abhijit.shinde\\PhyndDemo_v2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
