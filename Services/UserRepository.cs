@@ -56,6 +56,9 @@ namespace PhyndDemo_v2.Services{
 
         public User LoginUser(string email, string pass)
         {
+            if(string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass)){
+                return null;
+            }
             return _context.Users.SingleOrDefault(u => u.Email == email & u.Password == pass);
         }
 

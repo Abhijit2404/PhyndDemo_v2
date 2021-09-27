@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PhyndDemo_v2.Data;
+using PhyndDemo_v2.Helpers;
 using PhyndDemo_v2.Services;
 
 namespace PhyndDemo_v2
@@ -26,11 +28,14 @@ namespace PhyndDemo_v2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            //Db
             services.AddDbContext<phynd2Context>(options =>
             options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
+            //Repoitories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProviderRepository,ProviderRepository>();
             services.AddScoped<IProgramRepository,ProgramRepository>();
@@ -40,22 +45,44 @@ namespace PhyndDemo_v2
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
-            //Authentication
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,//false
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,//false
+            //Jwt Helpers
+            var appSettingsSection = Configuration.GetSection("Jwt");
+            services.Configure<Jwt>(appSettingsSection);
 
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                });
+            //Authentication
+            var appSettings = appSettingsSection.Get<Jwt>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var user = userService.GetUser(userId);
+                        if (user == null)
+                        {
+                            context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             //SwaggerDoc
             services.AddSwaggerGen(options => {
@@ -74,6 +101,7 @@ namespace PhyndDemo_v2
                 var securityRequirement = new OpenApiSecurityRequirement{{securitySchema, new []{"Bearer"}}};
                 options.AddSecurityRequirement(securityRequirement);
             });
+            
             services.AddControllers();
         }
 
