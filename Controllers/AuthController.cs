@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -15,14 +16,13 @@ namespace PhyndDemo_v2.Controllers
 
     [Route("authenticate")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
-
         private IConfiguration _config;
         private readonly IUserRepository _userRepository;
         private readonly Jwt _jwt;
 
-        public LoginController(IConfiguration config, IUserRepository userRepository,IOptions<Jwt> jwt)
+        public AuthController(IConfiguration config, IUserRepository userRepository,IOptions<Jwt> jwt)
         {
             _config = config;
             _userRepository = userRepository;
@@ -30,6 +30,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Login([FromBody] Login model)
         {
             var user = _userRepository.LoginUser(model.Email, model.Password);

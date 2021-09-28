@@ -45,7 +45,7 @@ namespace PhyndDemo_v2
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
-            //Jwt Helpers
+            //Jwt Class Config
             var appSettingsSection = Configuration.GetSection("Jwt");
             services.Configure<Jwt>(appSettingsSection);
 
@@ -63,9 +63,9 @@ namespace PhyndDemo_v2
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                        var userRepo = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
                         var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetUser(userId);
+                        var user = userRepo.GetUser(userId);
                         if (user == null)
                         {
                             context.Fail("Unauthorized");
