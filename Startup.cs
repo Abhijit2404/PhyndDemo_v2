@@ -57,6 +57,7 @@ namespace PhyndDemo_v2
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            .AddCookie(x => x.SlidingExpiration = true)
             .AddJwtBearer(x =>
             {
                 x.Events = new JwtBearerEvents
@@ -103,6 +104,7 @@ namespace PhyndDemo_v2
             });
             
             services.AddControllers();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

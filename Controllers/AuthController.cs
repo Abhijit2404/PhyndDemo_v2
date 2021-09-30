@@ -44,21 +44,22 @@ namespace PhyndDemo_v2.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(JwtRegisteredClaimNames.Name,user.FirstName),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email,user.Email),
+                    new Claim(type:"HospitalId", value : user.UserHospitalId.ToString()),
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            // return basic user info and authentication token
+            // return auth token with details when deserialize/decoded
             return Ok(new
             {
-                Id = user.Id,
-                Email = user.Email,
-                Hospital = user.UserHospitalId,
-                Token = tokenString
+                Token = tokenString,
+                ExpiresOn = tokenDescriptor.Expires         
             });
         }
         
