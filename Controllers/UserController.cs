@@ -45,6 +45,11 @@ namespace PhyndDemo_v2.Controllers
         [HttpPost]
         public ActionResult<UserToCreateDto> Post(UserToCreateDto user)
         {
+            if(_userRepository.CheckEmail(user.Email))
+            {
+                 return StatusCode(409, $"User with this Email already exists.");
+            }
+
             var createUser = _mapper.Map<User>(user);
             _userRepository.AddUser(createUser);
             _userRepository.Save();

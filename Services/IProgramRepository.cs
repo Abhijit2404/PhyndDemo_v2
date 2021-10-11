@@ -10,6 +10,7 @@ namespace PhyndDemo_v2.Services{
         void AddProgram(Model.Program Program);
         void DeleteProgram(Model.Program Program);
         IEnumerable<Model.Program> GetPrograms(programParams ProgramParams);
+        bool CheckProgram(string Name);
         bool Save();
     }
 }

@@ -96,5 +96,9 @@ namespace PhyndDemo_v2.Services{
 
             return collection.ToList();
         }
+        public bool CheckEmail(string Email)
+        {
+            return _context.Users.Any(a => a.Email == Email);
+        }
     }
 }

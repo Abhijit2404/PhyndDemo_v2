@@ -76,5 +76,10 @@ namespace PhyndDemo_v2.Services{
         {
             return (_context.SaveChanges() >= 0);
         }
+
+        public bool CheckProgram(string Name)
+        {
+            return _context.Programs.Any(a => a.Name == Name);
+        }
     }
 }

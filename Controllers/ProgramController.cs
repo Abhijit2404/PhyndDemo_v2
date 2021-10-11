@@ -44,6 +44,12 @@ namespace PhyndDemo_v2.Controllers
         [HttpPost]
         public ActionResult<ProgramToCreateDto> Post(ProgramToCreateDto Program)
         {
+
+            if(_programRepository.CheckProgram(Program.Name))
+            {
+                 return StatusCode(409, $"Program {Program.Name} already exists.");
+            }
+
             var createProgram = _mapper.Map<Model.Program>(Program);
             _programRepository.AddProgram(createProgram);
             _programRepository.Save();

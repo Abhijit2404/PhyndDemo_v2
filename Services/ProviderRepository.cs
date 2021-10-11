@@ -82,5 +82,10 @@ namespace PhyndDemo_v2.Services{
         {
             return (_context.SaveChanges() >= 0);
         }
+
+        public bool CheckProvider(string FirstName, string MiddleName,string LastName)
+        {
+            return _context.Providers.Any(a => a.FirstName == FirstName || a.MiddleName == MiddleName || a.LastName == LastName);
+        }
     }
 }

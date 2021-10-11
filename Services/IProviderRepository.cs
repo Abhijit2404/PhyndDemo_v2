@@ -11,6 +11,7 @@ namespace PhyndDemo_v2.Services{
         void AddProvider(Provider Provider);
         void DeleteProvider(Provider Provider);
         IEnumerable<Provider> GetProviders(Params ProviderParams);
+        bool CheckProvider(string FirstName, string MiddleName, string LastName);
         bool Save();
     }
 }

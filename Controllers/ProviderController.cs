@@ -45,6 +45,12 @@ namespace PhyndDemo_v2.Controllers
         [HttpPost]
         public ActionResult<ProviderToCreateDto> Post(ProviderToCreateDto Provider)
         {
+
+            if(_providerRepository.CheckProvider(Provider.FirstName,Provider.MiddleName,Provider.LastName))
+            {
+                 return StatusCode(409, $"Provider already exists.");
+            }
+
             var createProvider = _mapper.Map<Provider>(Provider);
             _providerRepository.AddProvider(createProvider);
             _providerRepository.Save();
