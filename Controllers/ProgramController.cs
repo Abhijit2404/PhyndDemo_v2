@@ -52,7 +52,7 @@ namespace PhyndDemo_v2.Controllers
             return CreatedAtRoute("GetProgram",new{Id = ProgramReturn.Id},ProgramReturn);
         }
 
-        [HttpDelete("Id")]
+        [HttpDelete]
         public ActionResult Delete(int Id){
 
             var ProgramfromRepo = _programRepository.GetProgram(Id);
@@ -65,7 +65,7 @@ namespace PhyndDemo_v2.Controllers
 
             _programRepository.Save();
 
-            return NoContent();
+            return Ok("Deleted Successfully");
         }
 
         [HttpGet("func")]

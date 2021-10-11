@@ -53,7 +53,7 @@ namespace PhyndDemo_v2.Controllers
             return CreatedAtRoute("GetProvider",new{Id = ProviderReturn.Id},ProviderReturn);
         }
 
-        [HttpDelete("Id")]
+        [HttpDelete]
         public ActionResult Delete(int Id){
 
             var ProviderfromRepo = _providerRepository.GetProvider(Id);
@@ -66,7 +66,7 @@ namespace PhyndDemo_v2.Controllers
 
             _providerRepository.Save();
 
-            return NoContent();
+            return Ok("Deleted Successfully");
         }
 
         [HttpGet("func")]

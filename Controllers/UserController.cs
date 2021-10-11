@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PhyndDemo_v2.Data;
 using PhyndDemo_v2.DTOs;
 using PhyndDemo_v2.Helpers;
 using PhyndDemo_v2.Model;
@@ -66,8 +65,7 @@ namespace PhyndDemo_v2.Controllers
             _userRepository.DeleteUser(userfromRepo);
 
             _userRepository.Save();
-
-            return NoContent();
+            return Ok("Deleted Successfully");
         }
 
         [HttpPatch]
@@ -76,7 +74,7 @@ namespace PhyndDemo_v2.Controllers
             _mapper.Map(user,userfromRepo);
             _userRepository.UpdateUser(userfromRepo);
             _userRepository.Save();
-            return NoContent();
+            return Ok("Updated Successfully");
         }
 
         [HttpGet("func")]
