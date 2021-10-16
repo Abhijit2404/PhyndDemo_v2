@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PhyndDemo_v2.Data;
 using PhyndDemo_v2.Helpers;
 using PhyndDemo_v2.Model;
@@ -54,12 +56,12 @@ namespace PhyndDemo_v2.Services{
             return (_context.SaveChanges() >= 0);
         }
 
-        public User LoginUser(string email, string pass)
+        public async Task<User> LoginUser(string email, string pass)
         {
             if(string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass)){
                 return null;
             }
-            return _context.Users.SingleOrDefault(u => u.Email == email & u.Password == pass);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email & u.Password == pass);
         }
 
         public IEnumerable<User> GetUsers(Params userParams)

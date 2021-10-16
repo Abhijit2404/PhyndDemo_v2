@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PhyndDemo_v2.Data;
-using PhyndDemo_v2.Helpers;
 using PhyndDemo_v2.Services;
 
 namespace PhyndDemo_v2
@@ -27,6 +26,7 @@ namespace PhyndDemo_v2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             //AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -44,35 +44,23 @@ namespace PhyndDemo_v2
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
-            //Jwt Class Config
-            var appSettingsSection = Configuration.GetSection("Jwt");
-            services.Configure<Jwt>(appSettingsSection);
-
-            //Authentication
-            var appSettings = appSettingsSection.Get<Jwt>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddCookie(x => x.SlidingExpiration = true)
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
+            //Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(x => {
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Secret"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
                 };
             });
 
             //SwaggerDoc
             services.AddSwaggerGen(options => {
-                options.SwaggerDoc("v1",new OpenApiInfo {Title = "HospitalManagement", Version = "v1"});
+                options.SwaggerDoc("v1",new OpenApiInfo {Title = "Phynd", Version = "v1"});
 
                 var securitySchema = new OpenApiSecurityScheme{
                     Description = "Authorize Here",
@@ -87,8 +75,6 @@ namespace PhyndDemo_v2
                 var securityRequirement = new OpenApiSecurityRequirement{{securitySchema, new []{"Bearer"}}};
                 options.AddSecurityRequirement(securityRequirement);
             });
-            
-            services.AddControllers();
             services.AddMvc();
         }
 
@@ -107,6 +93,7 @@ namespace PhyndDemo_v2
             app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseSwagger();

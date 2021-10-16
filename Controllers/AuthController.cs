@@ -2,12 +2,10 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using PhyndDemo_v2.Helpers;
 using PhyndDemo_v2.Model;
 using PhyndDemo_v2.Services;
 
@@ -20,48 +18,46 @@ namespace PhyndDemo_v2.Controllers
     {
         private IConfiguration _config;
         private readonly IUserRepository _userRepository;
-        private readonly Jwt _jwt;
 
-        public AuthController(IConfiguration config, IUserRepository userRepository,IOptions<Jwt> jwt)
+        public AuthController(IConfiguration config, IUserRepository userRepository)
         {
             _config = config;
             _userRepository = userRepository;
-            _jwt = jwt.Value;
         }
-
         [HttpPost]
-        [AllowAnonymous]
-        public IActionResult Login([FromBody] Login model)
+        public async Task<IActionResult> Login(Login user)
         {
-            var user = _userRepository.LoginUser(model.Email, model.Password);
-
-            if (user == null)
-                return BadRequest(new { message = "Email or password is incorrect" });
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwt.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if(user !=null && user.Email !=null && user.Password !=null)
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var login = await _userRepository.LoginUser(user.Email, user.Password);
+                if(login != null)
                 {
-                    new Claim(JwtRegisteredClaimNames.Name,user.FirstName),
-                    new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email,user.Email),
-                    new Claim(type:"HospitalId", value : user.UserHospitalId.ToString()),
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+                    var claims = new[]{
+                        new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
+                        new Claim("User",login.FirstName + " " + login.LastName),
+                        new Claim("Id", login.Id.ToString()),
+                        new Claim("Email",user.Email),
+                        new Claim("HospitalId", login.UserHospitalId.ToString())
+                    };
+                    
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
+                    var signIn = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
+                    var token = new JwtSecurityToken(
+                        claims.ToString(),
+                        expires:DateTime.Now.AddMinutes(60),
+                        signingCredentials:signIn);
+                    
+                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                }
 
-            // return auth token with details when deserialize/decoded
-            return Ok(new
-            {
-                Token = tokenString,
-                ExpiresOn = tokenDescriptor.Expires         
-            });
+                else{
+                    return BadRequest ("Invalid Credentials");
+                }
+
+            }
+            else{
+                return BadRequest();
+            }
         }
-        
     }
 }
