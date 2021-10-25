@@ -61,7 +61,7 @@ namespace PhyndDemo_v2.Services{
             if(string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass)){
                 return null;
             }
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email & u.Password == pass);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == pass);
         }
 
         public IEnumerable<User> GetUsers(Params userParams)

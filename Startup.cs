@@ -26,7 +26,9 @@ namespace PhyndDemo_v2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x => {
+                x.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
             //AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -49,14 +51,16 @@ namespace PhyndDemo_v2
             .AddJwtBearer(x => {
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Secret"],
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
                 };
             });
+            services.AddMvc();
 
             //SwaggerDoc
             services.AddSwaggerGen(options => {
@@ -75,7 +79,7 @@ namespace PhyndDemo_v2
                 var securityRequirement = new OpenApiSecurityRequirement{{securitySchema, new []{"Bearer"}}};
                 options.AddSecurityRequirement(securityRequirement);
             });
-            services.AddMvc();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -32,22 +33,24 @@ namespace PhyndDemo_v2.Controllers
                 var login = await _userRepository.LoginUser(user.Email, user.Password);
                 if(login != null)
                 {
-                    var claims = new[]{
+                    var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
                         new Claim("User",login.FirstName + " " + login.LastName),
                         new Claim("Id", login.Id.ToString()),
                         new Claim("Email",user.Email),
                         new Claim("HospitalId", login.UserHospitalId.ToString())
                     };
-                    
+
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
                     var signIn = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
                     var token = new JwtSecurityToken(
-                        claims.ToString(),
+                        _config["Jwt:Issuer"],
+                        _config["Jwt:Audience"],
+                        claims,
                         expires:DateTime.Now.AddMinutes(60),
                         signingCredentials:signIn);
                     
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
 
                 else{
