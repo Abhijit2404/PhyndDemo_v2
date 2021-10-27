@@ -12,6 +12,7 @@ namespace PhyndDemo_v2.Services{
             CreateMap<User,UserToCreateDto>();
             CreateMap<UserToUpdateDto,User>();
             CreateMap<UserToCreateDto,User>();
+            CreateMap<Hospital,HospitalDto>().ForMember(d => d.Address, d => d.MapFrom(src => $"{src.AddressLine1} {","}  {src.AddressLine2}"));
         }
     }
 }

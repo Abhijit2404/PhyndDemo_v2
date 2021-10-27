@@ -46,6 +46,11 @@ namespace PhyndDemo_v2.Services{
             return _context.Users.ToList<User>();
         }
 
+        public IEnumerable<Hospital> GetHospitals()
+        {
+            return _context.Hospitals.ToList<Hospital>();
+        }
+
         public void UpdateUser(User user)
         {
             //DTO Mapping

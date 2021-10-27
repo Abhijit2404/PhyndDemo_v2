@@ -29,6 +29,7 @@ namespace PhyndDemo_v2
             services.AddControllers().AddJsonOptions(x => {
                 x.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
+            
             //AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -49,6 +50,9 @@ namespace PhyndDemo_v2
             //Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(x => {
+                
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,

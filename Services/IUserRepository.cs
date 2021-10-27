@@ -8,6 +8,7 @@ namespace PhyndDemo_v2.Services{
     public interface IUserRepository{
 
         IEnumerable<User> GetUsers();
+        IEnumerable<Hospital> GetHospitals();
         User GetUser(int Id);
         void AddUser(User User);
         void DeleteUser(User User);
