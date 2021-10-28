@@ -56,6 +56,10 @@ namespace PhyndDemo_v2.Services{
             //DTO Mapping
         }
 
+        public int GetUserRole(int id) {
+            return _context.Userroles.FirstOrDefault(a => a.UserId == id).RoleId;
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);

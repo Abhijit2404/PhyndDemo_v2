@@ -42,6 +42,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<ProgramToCreateDto> Post(ProgramToCreateDto Program)
         {
 
@@ -59,6 +60,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpDelete]
+        [AllowAnonymous]
         public ActionResult Delete(int Id){
 
             var ProgramfromRepo = _programRepository.GetProgram(Id);
@@ -75,6 +77,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpGet("func")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<ProgramDto>> GetPrograms([FromQuery] programParams programParams){
             var programfromRepo = _programRepository.GetPrograms(programParams);
             return Ok(_mapper.Map<IEnumerable<ProgramDto>>(programfromRepo));

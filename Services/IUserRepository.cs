@@ -13,6 +13,7 @@ namespace PhyndDemo_v2.Services{
         void AddUser(User User);
         void DeleteUser(User User);
         void UpdateUser(User User);
+        int GetUserRole(int id);
         Task<User> LoginUser(string email, string pass);
         IEnumerable<User> GetUsers(Params userParams);
         bool CheckEmail(string Email);

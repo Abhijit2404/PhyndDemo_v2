@@ -31,6 +31,7 @@ namespace PhyndDemo_v2.Controllers
             if(user !=null && user.Email !=null && user.Password !=null)
             {
                 var login = await _userRepository.LoginUser(user.Email, user.Password);
+                var role = _userRepository.GetUserRole(login.Id);
                 if(login != null)
                 {
                     var claims = new[] {
@@ -38,7 +39,8 @@ namespace PhyndDemo_v2.Controllers
                         new Claim("User",login.FirstName + " " + login.LastName),
                         new Claim("Id", login.Id.ToString()),
                         new Claim("Email",user.Email),
-                        new Claim("HospitalId", login.UserHospitalId.ToString())
+                        new Claim("HospitalId", login.UserHospitalId.ToString()),
+                        new Claim("Role",role.ToString())
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
@@ -47,7 +49,7 @@ namespace PhyndDemo_v2.Controllers
                         _config["Jwt:Issuer"],
                         _config["Jwt:Audience"],
                         claims,
-                        expires:DateTime.Now.AddMinutes(60),
+                        expires:DateTime.Now.AddMinutes(30),
                         signingCredentials:signIn);
                     
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));

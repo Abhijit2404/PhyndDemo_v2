@@ -43,6 +43,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<ProviderToCreateDto> Post(ProviderToCreateDto Provider)
         {
 
@@ -60,6 +61,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpDelete]
+        [AllowAnonymous]
         public ActionResult Delete(int Id){
 
             var ProviderfromRepo = _providerRepository.GetProvider(Id);
@@ -76,6 +78,7 @@ namespace PhyndDemo_v2.Controllers
         }
 
         [HttpGet("func")]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<ProviderDto>> GetProviders([FromQuery] Params providerParams){
             var providerfromRepo = _providerRepository.GetProviders(providerParams);
             return Ok(_mapper.Map<IEnumerable<ProviderDto>>(providerfromRepo));
