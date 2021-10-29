@@ -31,9 +31,9 @@ namespace PhyndDemo_v2.Controllers
             if(user !=null && user.Email !=null && user.Password !=null)
             {
                 var login = await _userRepository.LoginUser(user.Email, user.Password);
-                var role = _userRepository.GetUserRole(login.Id);
                 if(login != null)
                 {
+                    var role = _userRepository.GetUserRole(login.Id);
                     var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),
                         new Claim("User",login.FirstName + " " + login.LastName),
