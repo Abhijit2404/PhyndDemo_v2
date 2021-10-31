@@ -55,13 +55,17 @@ namespace PhyndDemo_v2.Controllers
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
 
+                else if(login == null){
+                    return BadRequest ("Invalid");
+                }
+                
                 else{
                     return BadRequest ("Invalid Credentials");
                 }
 
             }
             else{
-                return BadRequest();
+                return BadRequest("Invalid");
             }
         }
     }
